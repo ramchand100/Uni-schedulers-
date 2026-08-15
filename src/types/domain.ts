@@ -71,6 +71,7 @@ export interface Profile {
   university: string | null;
   avatarColor: string;
   activeDays: DayOfWeek[];
+  onboardingCompleted: boolean;
 }
 
 export type FriendshipStatus = 'pending' | 'accepted' | 'declined';

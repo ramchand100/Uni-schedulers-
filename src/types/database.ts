@@ -13,10 +13,12 @@ export interface Database {
           university: string | null;
           avatar_color: string;
           active_days: number[];
+          onboarding_completed: boolean;
           created_at: string;
         };
         Insert: Partial<Database['public']['Tables']['profiles']['Row']> & { id: string; username: string };
         Update: Partial<Database['public']['Tables']['profiles']['Row']>;
+        Relationships: [];
       };
       semesters: {
         Row: {
@@ -35,6 +37,7 @@ export interface Database {
           year: number;
         };
         Update: Partial<Database['public']['Tables']['semesters']['Row']>;
+        Relationships: [];
       };
       courses: {
         Row: {
@@ -57,6 +60,7 @@ export interface Database {
           credit_hours: number;
         };
         Update: Partial<Database['public']['Tables']['courses']['Row']>;
+        Relationships: [];
       };
       class_sessions: {
         Row: {
@@ -76,6 +80,7 @@ export interface Database {
           end_time: string;
         };
         Update: Partial<Database['public']['Tables']['class_sessions']['Row']>;
+        Relationships: [];
       };
       friendships: {
         Row: {
@@ -91,8 +96,10 @@ export interface Database {
           addressee_id: string;
         };
         Update: Partial<Database['public']['Tables']['friendships']['Row']>;
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
     Functions: {
       search_users: {
         Args: { query: string };
@@ -103,5 +110,7 @@ export interface Database {
         Returns: boolean;
       };
     };
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 }

@@ -15,6 +15,7 @@ create table public.profiles (
   university text,
   avatar_color text not null default '#4F46E5',
   active_days smallint[] not null default '{1,2,3,4,5}',
+  onboarding_completed boolean not null default false,
   created_at timestamptz not null default now(),
   constraint username_format check (username ~ '^[a-z0-9_]{3,20}$'),
   constraint active_days_valid check (

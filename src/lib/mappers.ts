@@ -14,6 +14,7 @@ export function toProfile(row: ProfileRow): Profile {
     university: row.university,
     avatarColor: row.avatar_color,
     activeDays: row.active_days as DayOfWeek[],
+    onboardingCompleted: row.onboarding_completed,
   };
 }
 
