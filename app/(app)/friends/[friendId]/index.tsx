@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { ScheduleGrid } from '@/components/schedule/ScheduleGrid';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { Spinner } from '@/components/ui/Spinner';
 import { useCoursesForUserAndSemester } from '@/hooks/useCourses';
 import { useFreeTimeOverlap } from '@/hooks/useFreeTimeOverlap';
@@ -52,9 +53,21 @@ export default function FriendScheduleScreen() {
   const freeTimeBlocks = useFreeTimeOverlap(mySessions, friendSessions, activeDays);
 
   const isLoading = friendProfileLoading || friendSemesterLoading || myCoursesQuery.isLoading || friendCoursesQuery.isLoading;
+  const isError = myCoursesQuery.isError || friendCoursesQuery.isError;
 
   if (isLoading) {
     return <Spinner />;
+  }
+
+  if (isError) {
+    return (
+      <ErrorState
+        onRetry={() => {
+          myCoursesQuery.refetch();
+          friendCoursesQuery.refetch();
+        }}
+      />
+    );
   }
 
   if (!friendActiveSemester) {

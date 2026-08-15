@@ -1,9 +1,10 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { CourseCard } from '@/components/schedule/CourseCard';
 import { ScheduleGrid } from '@/components/schedule/ScheduleGrid';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { Spinner } from '@/components/ui/Spinner';
 import { useCoursesForUserAndSemester } from '@/hooks/useCourses';
 import { useProfile } from '@/hooks/useProfile';
@@ -21,6 +22,10 @@ export default function ScheduleScreen() {
 
   if (semesterLoading || coursesQuery.isLoading) {
     return <Spinner />;
+  }
+
+  if (coursesQuery.isError) {
+    return <ErrorState onRetry={coursesQuery.refetch} />;
   }
 
   if (!activeSemester) {
@@ -67,7 +72,13 @@ export default function ScheduleScreen() {
               }}
             />
           </View>
-          <ScrollView style={styles.listScroll} contentContainerStyle={styles.list}>
+          <ScrollView
+            style={styles.listScroll}
+            contentContainerStyle={styles.list}
+            refreshControl={
+              <RefreshControl refreshing={coursesQuery.isFetching} onRefresh={coursesQuery.refetch} tintColor={theme.primary} />
+            }
+          >
             {courses.map((course) => (
               <CourseCard key={course.id} course={course} onPress={() => router.push(`/(app)/schedule/course/${course.id}/edit`)} />
             ))}

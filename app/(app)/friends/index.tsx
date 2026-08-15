@@ -1,17 +1,30 @@
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { FriendListItem } from '@/components/friends/FriendListItem';
 import { FriendRequestCard } from '@/components/friends/FriendRequestCard';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { Spinner } from '@/components/ui/Spinner';
 import { useFriendRequests, useFriends, useRespondToFriendRequest } from '@/hooks/useFriends';
 import { theme } from '@/lib/colors';
 
 export default function FriendsScreen() {
-  const { data: friends, isLoading: friendsLoading } = useFriends();
-  const { data: requests, isLoading: requestsLoading } = useFriendRequests();
+  const {
+    data: friends,
+    isLoading: friendsLoading,
+    isError: friendsError,
+    isFetching: friendsFetching,
+    refetch: refetchFriends,
+  } = useFriends();
+  const {
+    data: requests,
+    isLoading: requestsLoading,
+    isError: requestsError,
+    isFetching: requestsFetching,
+    refetch: refetchRequests,
+  } = useFriendRequests();
   const respond = useRespondToFriendRequest();
 
   const incoming = requests?.filter((r) => r.direction === 'incoming') ?? [];
@@ -24,7 +37,19 @@ export default function FriendsScreen() {
         <Button title="+ Add friend" onPress={() => router.push('/(app)/friends/add')} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl
+            refreshing={friendsFetching || requestsFetching}
+            onRefresh={() => {
+              refetchFriends();
+              refetchRequests();
+            }}
+            tintColor={theme.primary}
+          />
+        }
+      >
         {incoming.length > 0 ? (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Requests</Text>
@@ -54,6 +79,13 @@ export default function FriendsScreen() {
           <Text style={styles.sectionTitle}>Your friends</Text>
           {friendsLoading || requestsLoading ? (
             <Spinner />
+          ) : friendsError || requestsError ? (
+            <ErrorState
+              onRetry={() => {
+                refetchFriends();
+                refetchRequests();
+              }}
+            />
           ) : !friends || friends.length === 0 ? (
             <EmptyState title="No friends yet" description="Add classmates to see when you're free together." />
           ) : (

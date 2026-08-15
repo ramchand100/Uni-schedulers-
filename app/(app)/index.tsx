@@ -1,6 +1,7 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { Spinner } from '@/components/ui/Spinner';
 import { useProfile } from '@/hooks/useProfile';
 import { useTodayClasses } from '@/hooks/useTodayClasses';
@@ -10,7 +11,7 @@ import { DAY_LABELS } from '@/types/domain';
 
 export default function TodayScreen() {
   const { data: profile } = useProfile();
-  const { data: items, isLoading } = useTodayClasses();
+  const { data: items, isLoading, isError, isFetching, refetch } = useTodayClasses();
   const today = new Date();
   const todayLabel = DAY_LABELS[today.getDay() as keyof typeof DAY_LABELS];
 
@@ -20,6 +21,8 @@ export default function TodayScreen() {
 
       {isLoading ? (
         <Spinner />
+      ) : isError ? (
+        <ErrorState onRetry={refetch} />
       ) : !items || items.length === 0 ? (
         <EmptyState title="No classes today" description="Enjoy your free day, or check the Schedule tab to plan ahead." />
       ) : (
@@ -27,6 +30,7 @@ export default function TodayScreen() {
           data={items}
           keyExtractor={(item) => item.session.id}
           contentContainerStyle={styles.list}
+          refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} tintColor={theme.primary} />}
           renderItem={({ item }) => (
             <View style={styles.row}>
               <View style={[styles.colorDot, { backgroundColor: item.color }]} />
