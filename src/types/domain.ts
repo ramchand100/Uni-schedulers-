@@ -72,6 +72,8 @@ export interface Profile {
   avatarColor: string;
   activeDays: DayOfWeek[];
   onboardingCompleted: boolean;
+  notificationsEnabled: boolean;
+  reminderMinutesBefore: number;
 }
 
 export type FriendshipStatus = 'pending' | 'accepted' | 'declined';

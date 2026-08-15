@@ -14,6 +14,8 @@ export interface Database {
           avatar_color: string;
           active_days: number[];
           onboarding_completed: boolean;
+          notifications_enabled: boolean;
+          reminder_minutes_before: number;
           created_at: string;
         };
         Insert: Partial<Database['public']['Tables']['profiles']['Row']> & { id: string; username: string };

@@ -29,7 +29,17 @@ export function useUpdateProfile() {
   const userId = session?.user.id;
   const queryClient = useQueryClient();
 
-  return async (updates: Partial<{ username: string; fullName: string; university: string; activeDays: DayOfWeek[]; onboardingCompleted: boolean }>) => {
+  return async (
+    updates: Partial<{
+      username: string;
+      fullName: string;
+      university: string;
+      activeDays: DayOfWeek[];
+      onboardingCompleted: boolean;
+      notificationsEnabled: boolean;
+      reminderMinutesBefore: number;
+    }>
+  ) => {
     if (!userId) throw new Error('Not authenticated');
 
     const { error } = await supabase
@@ -40,6 +50,8 @@ export function useUpdateProfile() {
         ...(updates.university !== undefined ? { university: updates.university } : {}),
         ...(updates.activeDays !== undefined ? { active_days: updates.activeDays } : {}),
         ...(updates.onboardingCompleted !== undefined ? { onboarding_completed: updates.onboardingCompleted } : {}),
+        ...(updates.notificationsEnabled !== undefined ? { notifications_enabled: updates.notificationsEnabled } : {}),
+        ...(updates.reminderMinutesBefore !== undefined ? { reminder_minutes_before: updates.reminderMinutesBefore } : {}),
       })
       .eq('id', userId);
 

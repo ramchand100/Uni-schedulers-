@@ -1,9 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
+import { useScheduleNotifications } from '@/hooks/useScheduleNotifications';
 import { theme } from '@/lib/colors';
 
 export default function AppTabsLayout() {
+  useScheduleNotifications();
+
   return (
     <Tabs
       screenOptions={{

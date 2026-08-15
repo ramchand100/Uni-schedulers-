@@ -15,6 +15,8 @@ export function toProfile(row: ProfileRow): Profile {
     avatarColor: row.avatar_color,
     activeDays: row.active_days as DayOfWeek[],
     onboardingCompleted: row.onboarding_completed,
+    notificationsEnabled: row.notifications_enabled,
+    reminderMinutesBefore: row.reminder_minutes_before,
   };
 }
 
