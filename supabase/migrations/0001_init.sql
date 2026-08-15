@@ -165,6 +165,25 @@ as $$
 $$;
 
 -- ---------------------------------------------------------------------------
+-- get_profile_summaries(): basic public info for a set of user ids, used to
+-- render friend list / pending request cards even when a friendship hasn't
+-- been accepted yet (before that, `is_friend()` is false so the base
+-- `profiles` SELECT policy wouldn't otherwise expose the other party's row).
+-- ---------------------------------------------------------------------------
+
+create or replace function public.get_profile_summaries(ids uuid[])
+returns table (id uuid, username text, full_name text, avatar_color text)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select p.id, p.username, p.full_name, p.avatar_color
+  from public.profiles p
+  where p.id = any(ids);
+$$;
+
+-- ---------------------------------------------------------------------------
 -- Row Level Security
 -- ---------------------------------------------------------------------------
 

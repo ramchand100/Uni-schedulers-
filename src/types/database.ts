@@ -105,6 +105,10 @@ export interface Database {
         Args: { query: string };
         Returns: { id: string; username: string; full_name: string | null; avatar_color: string }[];
       };
+      get_profile_summaries: {
+        Args: { ids: string[] };
+        Returns: { id: string; username: string; full_name: string | null; avatar_color: string }[];
+      };
       is_friend: {
         Args: { target: string };
         Returns: boolean;
