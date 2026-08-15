@@ -91,3 +91,16 @@ export interface TimeInterval {
 export interface FreeTimeBlock extends TimeInterval {
   dayOfWeek: DayOfWeek;
 }
+
+// A single renderable block on the ScheduleGrid, decoupled from the raw
+// Course/ClassSession shape so the grid can render "own", "friend", and
+// free-time-overlay blocks through one component.
+export interface ScheduleBlock {
+  id: string;
+  dayOfWeek: DayOfWeek;
+  startTime: string;
+  endTime: string;
+  title: string;
+  subtitle: string | null;
+  color: string;
+}
